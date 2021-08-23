@@ -11,7 +11,7 @@ func:
   ret
 	.cfi_endproc
 
-# CHECK:   Section (4) .rela.eh_frame {
+# CHECK:   Section (5) .rela.eh_frame {
 # CHECK-NEXT:   0x1C R_RISCV_32_PCREL - 0x0
 # CHECK-NEXT:   0x20 R_RISCV_ADD32 - 0x0
 # CHECK-NEXT:   0x20 R_RISCV_SUB32 - 0x0

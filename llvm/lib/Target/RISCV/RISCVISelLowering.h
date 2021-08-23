@@ -25,6 +25,7 @@ struct RISCVRegisterInfo;
 namespace RISCVISD {
 enum NodeType : unsigned {
   FIRST_NUMBER = ISD::BUILTIN_OP_END,
+  #include "THEAD/THEADISDOp.def"
   RET_FLAG,
   URET_FLAG,
   SRET_FLAG,
@@ -282,10 +283,12 @@ enum NodeType : unsigned {
   // WARNING: Do not add anything in the end unless you want the node to
   // have memop! In fact, starting from FIRST_TARGET_MEMORY_OPCODE all
   // opcodes will be thought as target memory ops!
+  #include "THEAD/THEADISDMemOp.def"
 };
 } // namespace RISCVISD
 
 class RISCVTargetLowering : public TargetLowering {
+  #include "THEAD/THEADTargetLowering.h"
   const RISCVSubtarget &Subtarget;
 
 public:

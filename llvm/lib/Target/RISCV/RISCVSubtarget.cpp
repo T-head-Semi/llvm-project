@@ -148,3 +148,5 @@ unsigned RISCVSubtarget::getMaxLMULForFixedLengthVectors() const {
 bool RISCVSubtarget::useRVVForFixedLengthVectors() const {
   return hasStdExtV() && getMinRVVVectorSizeInBits() != 0;
 }
+
+#include "THEAD/THEADSubtarget.cpp"

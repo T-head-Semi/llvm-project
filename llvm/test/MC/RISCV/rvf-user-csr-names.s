@@ -3,7 +3,7 @@
 # RUN: llvm-mc -filetype=obj -triple riscv32 -mattr=+f < %s \
 # RUN:     | llvm-objdump -d --mattr=+f - \
 # RUN:     | FileCheck -check-prefix=CHECK-INST-ALIAS %s
-# RUN: llvm-mc -filetype=obj -triple riscv32 -mattr=+f < %s \
+# RUN: llvm-mc -filetype=obj -triple riscv32  < %s \
 # RUN:     | llvm-objdump -d - \
 # RUN:     | FileCheck -check-prefix=CHECK-INST-ALIAS-NO-F %s
 #
@@ -12,7 +12,7 @@
 # RUN: llvm-mc -filetype=obj -triple riscv64 -mattr=+f < %s \
 # RUN:     | llvm-objdump -d --mattr=+f - \
 # RUN:     | FileCheck -check-prefix=CHECK-INST-ALIAS %s
-# RUN: llvm-mc -filetype=obj -triple riscv64 -mattr=+f < %s \
+# RUN: llvm-mc -filetype=obj -triple riscv64 < %s \
 # RUN:     | llvm-objdump -d - \
 # RUN:     | FileCheck -check-prefix=CHECK-INST-ALIAS-NO-F %s
 

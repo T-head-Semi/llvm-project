@@ -18427,3 +18427,4 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
   llvm::Function *F = CGM.getIntrinsic(ID, IntrinsicTypes);
   return Builder.CreateCall(F, Ops, "");
 }
+

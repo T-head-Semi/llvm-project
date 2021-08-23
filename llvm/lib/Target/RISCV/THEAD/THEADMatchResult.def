@@ -1,0 +1,10 @@
+case Match_InvalidConstant_3: {
+  SMLoc ErrorLoc = ((RISCVOperand &)*Operands[ErrorInfo]).getStartLoc();
+  return Error(ErrorLoc,
+         "operand must be constant 3");
+}
+case Match_InvalidConstant_4: {
+  SMLoc ErrorLoc = ((RISCVOperand &)*Operands[ErrorInfo]).getStartLoc();
+  return Error(ErrorLoc,
+         "operand must be constant 4");
+}

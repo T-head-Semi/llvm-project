@@ -1,0 +1,24 @@
+public:
+  enum class THEAD {
+    Other, C906, C910,
+  };
+private:
+  THEAD THEADProcFamily = THEAD::Other;
+  bool HasTHeadC = false;
+  bool HasTHeadE = false;
+  bool HasTHeadSE = false;
+public:
+  bool hasTHeadC() const { return HasTHeadC; }
+  bool hasTHeadE() const { return HasTHeadE; }
+  bool hasTHeadSE() const { return HasTHeadSE; }
+  bool hasTHeadEorC() const { return HasTHeadE || HasTHeadC; }
+  bool isTHEADProc() const { return THEADProcFamily != THEAD::Other; }
+  THEAD getTHEADProc() const { return THEADProcFamily; }
+
+  // This overrides the PostRAScheduler bit in the SchedModel for each CPU.
+  bool enablePostRAScheduler() const override;
+
+  void overrideSchedPolicy(MachineSchedPolicy &Policy,
+                           unsigned NumRegionInstrs) const override;
+
+private:

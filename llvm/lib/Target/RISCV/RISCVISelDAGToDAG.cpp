@@ -443,6 +443,9 @@ void RISCVDAGToDAGISel::Select(SDNode *Node) {
     return;
   }
 
+  if (tryTHEADSelect(Node))
+    return;
+
   // Instruction Selection not handled by the auto-generated tablegen selection
   // should be handled here.
   unsigned Opcode = Node->getOpcode();
@@ -1723,3 +1726,5 @@ void RISCVDAGToDAGISel::doPeepholeLoadStoreADDI() {
 FunctionPass *llvm::createRISCVISelDag(RISCVTargetMachine &TM) {
   return new RISCVDAGToDAGISel(TM);
 }
+
+#include "THEAD/THEADDAGToDAGISel.cpp"

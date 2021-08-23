@@ -250,6 +250,11 @@ public:
     const MCObjectFileInfo *MOFI = Parser.getContext().getObjectFileInfo();
     ParserOptions.IsPicEnabled = MOFI->isPositionIndependent();
   }
+
+  void onBeginOfFile(bool NoFinalize) override {
+    if (!NoFinalize)
+      getTargetStreamer().emitTargetAttributes(*STI);
+  }
 };
 
 /// RISCVOperand - Instances of this class represent a parsed machine
@@ -882,6 +887,8 @@ public:
     assert(N == 1 && "Invalid number of operands!");
     Inst.addOperand(MCOperand::createImm(getRoundingMode()));
   }
+
+  #include "THEAD/THEADOperand.def"
 };
 } // end anonymous namespace.
 
@@ -1171,6 +1178,7 @@ bool RISCVAsmParser::MatchAndEmitInstruction(SMLoc IDLoc, unsigned &Opcode,
                                       (1 << 4),
                                       "immediate must be in the range");
   }
+  #include "THEAD/THEADMatchResult.def"
   }
 
   llvm_unreachable("Unknown match type detected!");
@@ -2118,6 +2126,12 @@ bool RISCVAsmParser::parseDirectiveAttribute() {
           setFeatureBits(RISCV::FeatureExtZvamo, "experimental-zvamo");
         else if (Ext == "zvlsseg")
           setFeatureBits(RISCV::FeatureStdExtZvlsseg, "experimental-zvlsseg");
+        else if (Ext == "xtheadc")
+          setFeatureBits(RISCV::FeatureTHEADC, "xtheadc");
+        else if (Ext == "xtheade")
+          setFeatureBits(RISCV::FeatureTHEADE, "xtheade");
+        else if (Ext == "xtheadse")
+          setFeatureBits(RISCV::FeatureTHEADSE, "xtheadse");
         else
           return Error(ValueExprLoc, "bad arch string " + Ext);
         Arch = Arch.drop_until([](char c) { return ::isdigit(c) || c == '_'; });
@@ -2192,6 +2206,13 @@ bool RISCVAsmParser::parseDirectiveAttribute() {
         formalArchStr = (Twine(formalArchStr) + "_zvamo0p10").str();
       if (getFeatureBits(RISCV::FeatureStdExtZvlsseg))
         formalArchStr = (Twine(formalArchStr) + "_zvlsseg0p10").str();
+      if (getFeatureBits(RISCV::FeatureTHEADC))
+        formalArchStr = (Twine(formalArchStr) + "_xtheadc1p0").str();
+      if (getFeatureBits(RISCV::FeatureTHEADE))
+        formalArchStr = (Twine(formalArchStr) + "_xtheade1p0").str();
+      if (getFeatureBits(RISCV::FeatureTHEADSE))
+        formalArchStr = (Twine(formalArchStr) + "_xtheadse1p0").str();
+
 
       getTargetStreamer().emitTextAttribute(Tag, formalArchStr);
     }

@@ -58,6 +58,7 @@ public:
                                const MCSubtargetInfo &STI, raw_ostream &O);
   static const char *getRegisterName(unsigned RegNo);
   static const char *getRegisterName(unsigned RegNo, unsigned AltIdx);
+  #include "THEAD/THEADInstPrinter.def"
 };
 } // namespace llvm
 

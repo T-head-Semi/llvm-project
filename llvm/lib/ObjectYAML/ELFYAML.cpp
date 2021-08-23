@@ -332,7 +332,6 @@ void ScalarEnumerationTraits<ELFYAML::ELF_EM>::enumeration(
   ECase(EM_LANAI);
   ECase(EM_BPF);
   ECase(EM_VE);
-  ECase(EM_CSKY);
 #undef ECase
   IO.enumFallback<Hex16>(Value);
 }
@@ -817,9 +816,6 @@ void ScalarEnumerationTraits<ELFYAML::ELF_REL>::enumeration(
     break;
   case ELF::EM_VE:
 #include "llvm/BinaryFormat/ELFRelocs/VE.def"
-    break;
-  case ELF::EM_CSKY:
-#include "llvm/BinaryFormat/ELFRelocs/CSKY.def"
     break;
   case ELF::EM_PPC64:
 #include "llvm/BinaryFormat/ELFRelocs/PowerPC64.def"

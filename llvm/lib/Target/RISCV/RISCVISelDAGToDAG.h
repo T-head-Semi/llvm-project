@@ -21,6 +21,7 @@
 // SelectionDAG operations.
 namespace llvm {
 class RISCVDAGToDAGISel : public SelectionDAGISel {
+  #include "THEAD/THEADDAGToDAGISel.h"
   const RISCVSubtarget *Subtarget = nullptr;
 
 public:

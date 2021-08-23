@@ -866,6 +866,7 @@ bool RISCVInstrInfo::verifyInstruction(const MachineInstr &MI,
         switch (OpType) {
         default:
           llvm_unreachable("Unexpected operand type");
+        #include "THEAD/THEADImm.def"
         case RISCVOp::OPERAND_UIMM4:
           Ok = isUInt<4>(Imm);
           break;
@@ -1615,3 +1616,5 @@ RISCVInstrInfo::isRVVSpillForZvlsseg(unsigned Opcode) const {
     return std::make_pair(8u, 1u);
   }
 }
+
+#include "THEAD/THEADInstrInfo.cpp"

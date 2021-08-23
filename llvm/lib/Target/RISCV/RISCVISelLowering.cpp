@@ -868,6 +868,7 @@ RISCVTargetLowering::RISCVTargetLowering(const TargetMachine &TM,
     setTargetDAGCombine(ISD::SRL);
     setTargetDAGCombine(ISD::SHL);
   }
+  #include "THEAD/THEADISelLowering.def"
 }
 
 EVT RISCVTargetLowering::getSetCCResultType(const DataLayout &DL,
@@ -4870,6 +4871,9 @@ static SDValue customLegalizeToWOpWithSExt(SDNode *N, SelectionDAG &DAG) {
 void RISCVTargetLowering::ReplaceNodeResults(SDNode *N,
                                              SmallVectorImpl<SDValue> &Results,
                                              SelectionDAG &DAG) const {
+  if (THEADReplaceNodeResults(N, Results, DAG))
+    return;
+
   SDLoc DL(N);
   switch (N->getOpcode()) {
   default:
@@ -5868,6 +5872,10 @@ static SDValue performANY_EXTENDCombine(SDNode *N,
 
 SDValue RISCVTargetLowering::PerformDAGCombine(SDNode *N,
                                                DAGCombinerInfo &DCI) const {
+  SDValue R = PerformTHEADDAGCombine(N, DCI);
+  if (R)
+    return R;
+
   SelectionDAG &DAG = DCI.DAG;
 
   switch (N->getOpcode()) {
@@ -8317,6 +8325,7 @@ const char *RISCVTargetLowering::getTargetNodeName(unsigned Opcode) const {
   switch ((RISCVISD::NodeType)Opcode) {
   case RISCVISD::FIRST_NUMBER:
     break;
+  #include "THEAD/THEADNodeName.def"
   NODE_NAME_CASE(RET_FLAG)
   NODE_NAME_CASE(URET_FLAG)
   NODE_NAME_CASE(SRET_FLAG)
@@ -9086,3 +9095,5 @@ namespace RISCVVIntrinsicsTable {
 } // namespace RISCVVIntrinsicsTable
 
 } // namespace llvm
+
+#include "THEAD/THEADISelLowering.cpp"

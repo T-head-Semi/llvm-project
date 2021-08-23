@@ -1585,7 +1585,7 @@ private:
   void lex();
 
 public:
-  void onBeginOfFile() override;
+  void onBeginOfFile(bool NoFinalize) override;
 
   OperandMatchResultTy parseOptionalOperand(OperandVector &Operands);
   OperandMatchResultTy parseOptionalOpr(OperandVector &Operands);
@@ -7353,7 +7353,7 @@ static const OptionalOperand AMDGPUOptionalOperandTable[] = {
   {"abid", AMDGPUOperand::ImmTyABID, false, nullptr}
 };
 
-void AMDGPUAsmParser::onBeginOfFile() {
+void AMDGPUAsmParser::onBeginOfFile(bool NoFinalize) {
   if (!getParser().getStreamer().getTargetStreamer() ||
       getSTI().getTargetTriple().getArch() == Triple::r600)
     return;

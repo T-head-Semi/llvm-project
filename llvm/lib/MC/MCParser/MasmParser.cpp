@@ -1344,7 +1344,7 @@ bool MasmParser::Run(bool NoInitialTextSection, bool NoFinalize) {
     (void)InsertResult;
   }
 
-  getTargetParser().onBeginOfFile();
+  getTargetParser().onBeginOfFile(NoFinalize);
 
   // While we have input, parse each statement.
   while (Lexer.isNot(AsmToken::Eof) ||
@@ -1371,7 +1371,7 @@ bool MasmParser::Run(bool NoInitialTextSection, bool NoFinalize) {
       eatToEndOfStatement();
   }
 
-  getTargetParser().onEndOfFile();
+  getTargetParser().onEndOfFile(NoFinalize);
   printPendingErrors();
 
   // All errors should have been emitted.

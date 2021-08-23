@@ -506,6 +506,11 @@
 ; GCN-O2-NEXT:       Lazy Block Frequency Analysis
 ; GCN-O2-NEXT:       Optimization Remark Emitter
 ; GCN-O2-NEXT:       Combine redundant instructions
+; GCN-O2-NEXT:       Optimization Remark Emitter
+; GCN-O2-NEXT:       DFA Jump Threading
+; GCN-O2-NEXT:       Dominator Tree Construction
+; GCN-O2-NEXT:       Basic Alias Analysis (stateless AA impl)
+; GCN-O2-NEXT:       Function Alias Analysis Results
 ; GCN-O2-NEXT:       Lazy Value Information Analysis
 ; GCN-O2-NEXT:       Jump Threading
 ; GCN-O2-NEXT:       Value Propagation
@@ -865,6 +870,11 @@
 ; GCN-O3-NEXT:       Lazy Block Frequency Analysis
 ; GCN-O3-NEXT:       Optimization Remark Emitter
 ; GCN-O3-NEXT:       Combine redundant instructions
+; GCN-O3-NEXT:       Optimization Remark Emitter
+; GCN-O3-NEXT:       DFA Jump Threading
+; GCN-O3-NEXT:       Dominator Tree Construction
+; GCN-O3-NEXT:       Basic Alias Analysis (stateless AA impl)
+; GCN-O3-NEXT:       Function Alias Analysis Results
 ; GCN-O3-NEXT:       Lazy Value Information Analysis
 ; GCN-O3-NEXT:       Jump Threading
 ; GCN-O3-NEXT:       Value Propagation

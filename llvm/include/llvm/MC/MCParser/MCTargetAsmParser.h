@@ -478,7 +478,7 @@ public:
 
   // For actions that have to be performed before a label is emitted
   virtual void doBeforeLabelEmit(MCSymbol *Symbol) {}
-  
+
   virtual void onLabelParsed(MCSymbol *Symbol) {}
 
   /// Ensure that all previously parsed instructions have been emitted to the
@@ -492,10 +492,10 @@ public:
   }
 
   // For any initialization at the beginning of parsing.
-  virtual void onBeginOfFile() {}
+  virtual void onBeginOfFile(bool NoFinalize) {}
 
   // For any checks or cleanups at the end of parsing.
-  virtual void onEndOfFile() {}
+  virtual void onEndOfFile(bool NoFinalize) {}
 };
 
 } // end namespace llvm

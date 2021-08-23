@@ -1127,7 +1127,7 @@ public:
     getStreamer().emitELFSize(LastFunctionLabel, Expr);
   }
 
-  void onEndOfFile() override { ensureEmptyNestingStack(); }
+  void onEndOfFile(bool NoFinalize) override { ensureEmptyNestingStack(); }
 };
 } // end anonymous namespace
 

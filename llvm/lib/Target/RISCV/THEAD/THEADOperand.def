@@ -1,0 +1,26 @@
+bool isUImm2() const {
+  int64_t Imm;
+  RISCVMCExpr::VariantKind VK = RISCVMCExpr::VK_RISCV_None;
+  if (!isImm())
+    return false;
+  bool IsConstantImm = evaluateConstantImm(getImm(), Imm, VK);
+  return IsConstantImm && isUInt<2>(Imm) && VK == RISCVMCExpr::VK_RISCV_None;
+}
+
+bool isConstant_3() const {
+  int64_t Imm;
+  RISCVMCExpr::VariantKind VK = RISCVMCExpr::VK_RISCV_None;
+  if (!isImm())
+    return false;
+  bool IsConstantImm = evaluateConstantImm(getImm(), Imm, VK);
+  return IsConstantImm && Imm == 3 && VK == RISCVMCExpr::VK_RISCV_None;
+}
+
+bool isConstant_4() const {
+  int64_t Imm;
+  RISCVMCExpr::VariantKind VK = RISCVMCExpr::VK_RISCV_None;
+  if (!isImm())
+    return false;
+  bool IsConstantImm = evaluateConstantImm(getImm(), Imm, VK);
+  return IsConstantImm && Imm == 4 && VK == RISCVMCExpr::VK_RISCV_None;
+}

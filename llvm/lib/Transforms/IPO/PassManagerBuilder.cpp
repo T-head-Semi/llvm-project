@@ -101,7 +101,7 @@ cl::opt<bool> EnableLoopFlatten("enable-loop-flatten", cl::init(false),
 
 cl::opt<bool> EnableDFAJumpThreading("enable-dfa-jump-thread",
                                      cl::desc("Enable DFA jump threading."),
-                                     cl::init(false), cl::Hidden);
+                                     cl::init(true), cl::Hidden);
 
 static cl::opt<bool>
     EnablePrepareForThinLTO("prepare-for-thinlto", cl::init(false), cl::Hidden,

@@ -33,6 +33,7 @@ namespace llvm {
 class StringRef;
 
 class RISCVSubtarget : public RISCVGenSubtargetInfo {
+  #include "THEAD/THEADSubtargetInfo.def"
   virtual void anchor();
   bool HasStdExtM = false;
   bool HasStdExtA = false;

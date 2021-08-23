@@ -69,7 +69,17 @@ isExperimentalExtension(StringRef Ext) {
   return None;
 }
 
+static bool isTHEADExtension(StringRef Ext) {
+  if (Ext == "xtheadc" || Ext == "xtheade" || Ext == "xtheadse")
+    return true;
+  return false;
+}
+
 static bool isSupportedExtension(StringRef Ext) {
+  // THEAD extensions.
+  if (isTHEADExtension(Ext))
+    return true;
+
   // LLVM supports "z" extensions which are marked as experimental.
   if (isExperimentalExtension(Ext))
     return true;
@@ -612,6 +622,17 @@ StringRef riscv::getRISCVABI(const ArgList &Args, const llvm::Triple &Triple) {
   // rv64* -> lp64
   StringRef MArch = getRISCVArch(Args, Triple);
 
+  auto isStandardLetter = [](StringRef Arch, StringRef Letter) -> bool {
+    auto Pos = Arch.find_insensitive(Letter);
+    if (Pos < Arch.find_insensitive("sx") &&
+        Pos < Arch.find_insensitive("s") &&
+        Pos < Arch.find_insensitive("x") &&
+        Pos < Arch.find_insensitive("z"))
+      return true;
+
+    return false;
+  };
+
   if (MArch.startswith_insensitive("rv32")) {
     // FIXME: parse `March` to find `D` extension properly
     if (MArch.substr(4).contains_insensitive("d") ||
@@ -623,8 +644,9 @@ StringRef riscv::getRISCVABI(const ArgList &Args, const llvm::Triple &Triple) {
       return "ilp32";
   } else if (MArch.startswith_insensitive("rv64")) {
     // FIXME: parse `March` to find `D` extension properly
-    if (MArch.substr(4).contains_insensitive("d") ||
-        MArch.startswith_insensitive("rv64g"))
+    if (MArch.startswith_insensitive("rv64g"))
+      return "lp64d";
+    else if (isStandardLetter(MArch.substr(4), "d"))
       return "lp64d";
     else
       return "lp64";

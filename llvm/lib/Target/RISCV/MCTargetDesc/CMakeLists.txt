@@ -15,7 +15,10 @@ add_llvm_component_library(LLVMRISCVDesc
   MC
   RISCVInfo
   Support
+  THEADDesc
 
   ADD_TO_COMPONENT
   RISCV
 )
+
+add_subdirectory(THEAD)

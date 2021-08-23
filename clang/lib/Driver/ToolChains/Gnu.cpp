@@ -1654,6 +1654,25 @@ static void findRISCVMultilibs(const Driver &D,
   Multilib Lp64 = makeMultilib("lib64/lp64").flag("+m64").flag("+mabi=lp64");
   Multilib Lp64f = makeMultilib("lib64/lp64f").flag("+m64").flag("+mabi=lp64f");
   Multilib Lp64d = makeMultilib("lib64/lp64d").flag("+m64").flag("+mabi=lp64d");
+
+  // [T-HEAD] T-HEAD only multilib
+  StringRef ArchName = tools::riscv::getRISCVArch(Args, TargetTriple);
+  if (ArchName.contains_insensitive("xthead") && TargetTriple.isArch32Bit()) {
+    Ilp32 = makeMultilib("lib32xthead/ilp32").flag("+m32").flag("+mabi=ilp32");
+    Ilp32f =
+      makeMultilib("lib32xthead/ilp32f").flag("+m32").flag("+mabi=ilp32f");
+    Ilp32d =
+      makeMultilib("lib32xthead/ilp32d").flag("+m32").flag("+mabi=ilp32d");
+  } else if (ArchName.contains_insensitive("xthead") &&
+             TargetTriple.isArch64Bit()) {
+    Lp64 = makeMultilib("lib64xthead/lp64").
+      flag("+m64").flag("+xthead").flag("+mabi=lp64");
+    Lp64f = makeMultilib("lib64xthead/lp64f").
+      flag("+m64").flag("+xthead").flag("+mabi=lp64f");
+    Lp64d = makeMultilib("lib64xthead/lp64d").
+      flag("+m64").flag("+xthead").flag("+mabi=lp64d");
+  }
+
   MultilibSet RISCVMultilibs =
       MultilibSet()
           .Either({Ilp32, Ilp32f, Ilp32d, Lp64, Lp64f, Lp64d})
@@ -1671,6 +1690,11 @@ static void findRISCVMultilibs(const Driver &D,
   addMultilibFlag(ABIName == "lp64", "mabi=lp64", Flags);
   addMultilibFlag(ABIName == "lp64f", "mabi=lp64f", Flags);
   addMultilibFlag(ABIName == "lp64d", "mabi=lp64d", Flags);
+
+  // [T-HEAD] T-HEAD only multilib
+  addMultilibFlag(ArchName.contains_insensitive("xthead"),
+                  "xthead", Flags);
+
 
   if (RISCVMultilibs.select(Flags, Result.SelectedMultilib))
     Result.Multilibs = RISCVMultilibs;

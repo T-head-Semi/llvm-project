@@ -162,6 +162,8 @@ public:
 
 protected:
   const RISCVSubtarget &STI;
+
+  #include "THEAD/THEADInstrInfo.def"
 };
 
 namespace RISCVVPseudosTable {

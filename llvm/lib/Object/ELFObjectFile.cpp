@@ -332,6 +332,15 @@ SubtargetFeatures ELFObjectFileBase::getRISCVFeatures() const {
       case 'c':
         Features.AddFeature(Arch.take_front());
         break;
+      case 'x':
+        if (Arch.consume_front("xtheadc"))
+          Features.AddFeature("xtheadc");
+        else if (Arch.consume_front("xtheade"))
+          Features.AddFeature("xtheade");
+        else if (Arch.consume_front("xtheadse"))
+          Features.AddFeature("xtheadse");
+
+        break;
       }
 
       // FIXME: Handle version numbers.

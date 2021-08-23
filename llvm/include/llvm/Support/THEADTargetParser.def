@@ -1,0 +1,8 @@
+
+PROC(THEAD_C906, {"c906"}, FK_64BIT, {"rv64imacxtheadc"})
+PROC(THEAD_C906FD, {"c906fd"}, FK_64BIT, {"rv64imafdcxtheadc"})
+PROC(THEAD_C906FDV, {"c906fdv"}, FK_64BIT, {"rv64imafdcvxtheadc"})
+PROC(THEAD_C910, {"c910"}, FK_64BIT, {"rv64imafdcxtheadc"})
+PROC(THEAD_C920, {"c920"}, FK_64BIT, {"rv64imafdcvxtheadc"})
+PROC(THEAD_R910, {"r910"}, FK_64BIT, {"rv64imafdcxtheadc"})
+PROC(THEAD_R920, {"r920"}, FK_64BIT, {"rv64imafdcvxtheadc"})

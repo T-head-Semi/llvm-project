@@ -1,0 +1,57 @@
+# RUN: llc %s -mtriple=riscv64 -mcpu=c906 -verify-misched -run-pass=machine-scheduler -o - | FileCheck %s -check-prefix=C906
+
+# Test readadvance of store data feeds by load result.
+
+--- |
+  define i64 @ld-st(i64 %A, i64 %B, i64* %addr, i64* %addr2) {
+    %tmp1 = add i64 %A, %B
+    %tmp2 = add i64 %A, %tmp1
+    %tmp3 = add i64 %A, %tmp2
+    %tmp4 = add i64 %A, %tmp3
+    %tmp5 = add i64 %A, %tmp4
+    %tmp6 = add i64 %A, %tmp5
+    %tmp7 = add i64 %A, %tmp6
+    %tmp8 = add i64 %A, %tmp7
+    %tmp9 = load i64, i64* %addr, align 8
+    store i64 %tmp9, i64* %addr2, align 8
+    %tmp10 = add i64 %tmp8, %tmp7
+    ret i64 %tmp10
+  }
+
+...
+---
+name:            ld-st
+alignment:       2
+tracksRegLiveness: true
+body:             |
+  bb.0 (%ir-block.0):
+    liveins: $x10, $x11, $x12, $x13
+
+
+    ; FIXME: There should be not ADD between LD and SD.
+    ; C906-LABEL: name: ld
+    ; C906: liveins: $x10, $x11, $x12, $x13
+    ; C906: LD
+    ; C906-NEXT: ADD
+    ; C906-NEXT: COPY
+    ; C906-NEXT: SD
+
+    %3:gpr = COPY $x13
+    %2:gpr = COPY $x12
+    %1:gpr = COPY $x11
+    %0:gpr = COPY $x10
+    %4:gpr = ADD %0, %1
+    %5:gpr = ADD %0, %4
+    %6:gpr = ADD %0, %5
+    %7:gpr = ADD %0, %6
+    %8:gpr = ADD %0, %7
+    %9:gpr = ADD %0, %8
+    %10:gpr = ADD %0, %9
+    %11:gpr = ADD %0, %10
+    %12:gpr = LD %2, 0 :: (load (s64) from %ir.addr)
+    SD %12, %3, 0 :: (store (s64) into %ir.addr2)
+    %13:gpr = ADD %11, %10
+    $x10 = COPY %13
+    PseudoRET implicit $x10
+
+...

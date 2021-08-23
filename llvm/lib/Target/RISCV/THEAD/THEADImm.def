@@ -1,0 +1,9 @@
+case RISCVOp::OPERAND_UIMM2:
+  Ok = isUInt<2>(Imm);
+  break;
+case RISCVOp::OPERAND_CONST3:
+  Ok = (Imm == 3);
+  break;
+case RISCVOp::OPERAND_CONST4:
+  Ok = (Imm == 4);
+  break;

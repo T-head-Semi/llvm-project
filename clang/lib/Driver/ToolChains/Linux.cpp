@@ -292,8 +292,15 @@ Linux::Linux(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)
     addPathIfExists(D, SysRoot + "/usr/lib/../" + OSLibDir, Paths);
   if (IsRISCV) {
     StringRef ABIName = tools::riscv::getRISCVABI(Args, Triple);
-    addPathIfExists(D, SysRoot + "/" + OSLibDir + "/" + ABIName, Paths);
-    addPathIfExists(D, SysRoot + "/usr/" + OSLibDir + "/" + ABIName, Paths);
+    StringRef ArchName = tools::riscv::getRISCVArch(Args, Triple);
+    std::string OSLibDirX = OSLibDir;
+
+    if (ArchName.contains_insensitive("xthead") && Triple.isArch32Bit())
+      OSLibDirX = "lib32xthead";
+    else if (ArchName.contains_insensitive("xthead") && Triple.isArch64Bit())
+      OSLibDirX = "lib64xthead";
+    addPathIfExists(D, SysRoot + "/" + OSLibDirX + "/" + ABIName, Paths);
+    addPathIfExists(D, SysRoot + "/usr/" + OSLibDirX + "/" + ABIName, Paths);
   }
 
   Generic_GCC::AddMultiarchPaths(D, SysRoot, OSLibDir, Paths);
@@ -345,6 +352,13 @@ std::string Linux::computeSysRoot() const {
     std::string AndroidSysRootPath = (ClangDir + "/../sysroot").str();
     if (getVFS().exists(AndroidSysRootPath))
       return AndroidSysRootPath;
+  }
+
+  if (getTriple().isRISCV() && isCrossCompiling()) {
+    const StringRef ClangDir = getDriver().getInstalledDir();
+    std::string SysRootPath = (ClangDir + "/../sysroot").str();
+    if (getVFS().exists(SysRootPath))
+      return SysRootPath;
   }
 
   if (!GCCInstallation.isValid() || !getTriple().isMIPS())
@@ -486,12 +500,20 @@ std::string Linux::getDynamicLinker(const ArgList &Args) const {
     StringRef ABIName = tools::riscv::getRISCVABI(Args, Triple);
     LibDir = "lib";
     Loader = ("ld-linux-riscv32-" + ABIName + ".so.1").str();
+
+    StringRef ArchName = tools::riscv::getRISCVArch(Args, Triple);
+    if (ArchName.contains_insensitive("xthead"))
+      Loader = ("ld-linux-riscv32xthead-" + ABIName + ".so.1").str();
     break;
   }
   case llvm::Triple::riscv64: {
     StringRef ABIName = tools::riscv::getRISCVABI(Args, Triple);
     LibDir = "lib";
     Loader = ("ld-linux-riscv64-" + ABIName + ".so.1").str();
+
+    StringRef ArchName = tools::riscv::getRISCVArch(Args, Triple);
+    if (ArchName.contains_insensitive("xthead"))
+      Loader = ("ld-linux-riscv64xthead-" + ABIName + ".so.1").str();
     break;
   }
   case llvm::Triple::sparc:

@@ -1,0 +1,81 @@
+# RUN: llc %s -mtriple=riscv64 -mcpu=c906 -verify-misched -run-pass=machine-scheduler -o - | FileCheck %s -check-prefix=C906
+# RUN: llc %s -mtriple=riscv64 -mcpu=c910 -verify-misched -run-pass=machine-scheduler -o - | FileCheck %s -check-prefix=C910
+
+--- |
+  define i64 @float-cal(i64 %A, i64 %B, float %f1, float %f2) #0 {
+    %tmp1 = add i64 %A, %B
+    %tmp2 = add i64 %A, %tmp1
+    %tmp3 = add i64 %A, %tmp2
+    %tmp4 = add i64 %A, %tmp3
+    %tmp5 = add i64 %A, %tmp4
+    %tmp6 = add i64 %A, %tmp5
+    %tmp7 = add i64 %A, %tmp6
+    %tmp8 = add i64 %A, %tmp7
+    %tmp9 = add i64 %A, %tmp8
+    %tmp10 = fadd float %f1, %f2
+    %tmp11 = fptosi float %tmp10 to i64
+    %tmp12 = add i64 %tmp11, %tmp9
+    ret i64 %tmp12
+  }
+
+...
+---
+name:            float-cal
+alignment:       2
+tracksRegLiveness: true
+body:             |
+  bb.0 (%ir-block.0):
+    liveins: $x10, $x11, $f10_f, $f11_f
+
+    ; C906-LABEL: name: float-cal
+    ; C906: liveins: $x10, $x11, $f10_f, $f11_f
+    ; C906: ADD
+    ; C906-NEXT: ADD
+    ; C906-NEXT: ADD
+    ; C906-NEXT: ADD
+    ; C906-NEXT: FADD_S
+    ; C906-NEXT: ADD
+    ; C906-NEXT: ADD
+    ; C906-NEXT: FCVT_L_S
+    ; C906-NEXT: ADD
+    ; C906-NEXT: ADD
+    ; C906-NEXT: ADD
+    ; C906-NEXT: ADD
+
+
+    ; C910-LABEL: name: float-cal
+    ; C910: liveins: $x10, $x11, $f10_f, $f11_f
+    ; C910: FADD_S
+    ; C910-NEXT: ADD
+    ; C910-NEXT: ADD
+    ; C910-NEXT: ADD
+    ; C910-NEXT: ADD
+    ; C910-NEXT: ADD
+    ; C910-NEXT: ADD
+    ; C910-NEXT: ADD
+    ; C910-NEXT: ADD
+    ; C910-NEXT: FCVT_L_S
+    ; C910-NEXT: ADD
+    ; C910-NEXT: ADD
+
+
+    %3:fpr32 = COPY $f11_f
+    %2:fpr32 = COPY $f10_f
+    %1:gpr = COPY $x11
+    %0:gpr = COPY $x10
+    %4:gpr = ADD %0, %1
+    %5:gpr = ADD %0, %4
+    %6:gpr = ADD %0, %5
+    %7:gpr = ADD %0, %6
+    %8:gpr = ADD %0, %7
+    %9:gpr = ADD %0, %8
+    %10:gpr = ADD %0, %9
+    %11:gpr = ADD %0, %10
+    %12:gpr = ADD %0, %11
+    %13:fpr32 = FADD_S %2, %3, 7
+    %14:gpr = FCVT_L_S %13, 1
+    %15:gpr = ADD %14, %12
+    $x10 = COPY %15
+    PseudoRET implicit $x10
+
+...
